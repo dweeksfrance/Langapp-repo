@@ -1,0 +1,26 @@
+# Generate the Xcode project with:  brew install xcodegen && xcodegen
+name: Langapp
+options:
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  LangappCore:
+    path: Packages/LangappCore
+targets:
+  Langapp:
+    type: application
+    platform: iOS
+    sources: [Langapp]
+    dependencies:
+      - package: LangappCore
+    info:
+      path: Langapp/Info.plist
+      properties:
+        CFBundleDisplayName: Langapp
+        NSContactsUsageDescription: Langapp reads your contacts' phone numbers to pick the right keyboard language when you write to them.
+        UILaunchScreen: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.langapp
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
