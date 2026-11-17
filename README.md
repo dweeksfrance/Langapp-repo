@@ -6,7 +6,7 @@ An iOS app for writing messages that picks the keyboard language from the contac
 |---|---|
 | UK (+44) | English (UK) |
 | US (+1) | English (US) |
-| French (+33 or 0X XX XX XX XX) | Asks you the first time, then remembers your choice for that contact |
+| French, including overseas (+33, +262, +508, +590, +594, +596, +681, +687, +689, or 0X XX XX XX XX) | Asks you the first time, then remembers your choice for that contact |
 | Anything else | Left as it is |
 
 If a contact has several numbers, the first UK, US or French number in the contact card decides. For French contacts, the globe button in the compose screen lets you change the remembered language.

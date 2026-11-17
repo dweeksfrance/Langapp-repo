@@ -34,10 +34,23 @@ public enum PhoneNumberClassifier {
         return regionForNational(digits, region: region)
     }
 
+    /// Country codes of French overseas departments and territories.
+    static let frenchOverseasCodes = [
+        "262", // Réunion, Mayotte
+        "508", // Saint-Pierre-et-Miquelon
+        "590", // Guadeloupe, Saint-Barthélemy, Saint-Martin
+        "594", // French Guiana
+        "596", // Martinique
+        "681", // Wallis-et-Futuna
+        "687", // New Caledonia
+        "689", // French Polynesia
+    ]
+
     /// `digits` starts with the country code.
     private static func regionForInternational(_ digits: String) -> PhoneRegion {
         if digits.hasPrefix("44") { return .unitedKingdom }
         if digits.hasPrefix("33") { return .france }
+        if frenchOverseasCodes.contains(where: { digits.hasPrefix($0) }) { return .france }
         if digits.hasPrefix("1") { return .unitedStates } // +1 is shared with Canada and the Caribbean.
         return .other
     }
@@ -46,6 +59,7 @@ public enum PhoneNumberClassifier {
         switch region {
         case "FR":
             // French national numbers: 0 followed by 9 digits, e.g. 06 12 34 56 78.
+            // Overseas departments dialled from France (0262…, 0690…) have the same shape.
             return digits.count == 10 && digits.hasPrefix("0") ? .france : .other
         case "GB":
             return digits.hasPrefix("0") && (10...11).contains(digits.count) ? .unitedKingdom : .other

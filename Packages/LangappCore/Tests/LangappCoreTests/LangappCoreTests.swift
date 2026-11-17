@@ -17,6 +17,19 @@ final class PhoneNumberClassifierTests: XCTestCase {
         XCTAssertEqual(region("+353 1 234 5678"), .other)
     }
 
+    func testFrenchOverseasCountAsFrench() {
+        XCTAssertEqual(region("+262 692 12 34 56"), .france)   // Réunion
+        XCTAssertEqual(region("+590 690 12 34 56"), .france)   // Guadeloupe
+        XCTAssertEqual(region("+594 694 12 34 56"), .france)   // French Guiana
+        XCTAssertEqual(region("+596 696 12 34 56"), .france)   // Martinique
+        XCTAssertEqual(region("+508 55 12 34"), .france)       // Saint-Pierre-et-Miquelon
+        XCTAssertEqual(region("00687 75 12 34"), .france)      // New Caledonia
+        XCTAssertEqual(region("+689 87 12 34 56"), .france)    // French Polynesia
+        XCTAssertEqual(region("+681 82 12 34"), .france)       // Wallis-et-Futuna
+        XCTAssertEqual(region("0692 12 34 56", "FR"), .france) // Réunion, national format
+        XCTAssertEqual(region("+591 2 123 4567"), .other)      // Bolivia, a neighbouring code
+    }
+
     func testNationalFormatsUseDeviceRegion() {
         XCTAssertEqual(region("06 12 34 56 78", "FR"), .france)
         XCTAssertEqual(region("07700 900123", "FR"), .other) // UK-looking number on a French phone
