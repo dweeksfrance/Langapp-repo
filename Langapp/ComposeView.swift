@@ -1,3 +1,4 @@
+import LangappCore
 import MessageUI
 import SwiftUI
 
@@ -6,6 +7,7 @@ struct ComposeView: View {
     @StateObject private var controller: ComposeController
     @State private var text = ""
     @State private var isShowingMessageComposer = false
+    @Environment(\.openURL) private var openURL
 
     init(contact: Contact) {
         self.contact = contact
@@ -37,8 +39,22 @@ struct ComposeView: View {
                         Label("Keyboard language", systemImage: "globe")
                     }
                 }
-                Button("Send") { isShowingMessageComposer = true }
-                    .disabled(text.isEmpty || !MFMessageComposeViewController.canSendText())
+                Menu("Send") {
+                    Button {
+                        isShowingMessageComposer = true
+                    } label: {
+                        Label("Messages", systemImage: "message")
+                    }
+                    .disabled(!MFMessageComposeViewController.canSendText())
+
+                    Button {
+                        if let url = whatsAppURL { openURL(url) }
+                    } label: {
+                        Label("WhatsApp", systemImage: "phone.bubble")
+                    }
+                    .disabled(whatsAppURL == nil)
+                }
+                .disabled(text.isEmpty)
             }
         }
         .confirmationDialog(
@@ -60,6 +76,16 @@ struct ComposeView: View {
             .ignoresSafeArea()
         }
         .onAppear { controller.start() }
+    }
+
+    /// Opens WhatsApp (or wa.me in Safari if it isn't installed) on this contact's chat,
+    /// with the text filled in, ready to send.
+    private var whatsAppURL: URL? {
+        WhatsAppLink.url(
+            phoneNumbers: contact.phoneNumbers,
+            text: text,
+            defaultRegion: Locale.current.region?.identifier
+        )
     }
 }
 

@@ -99,3 +99,32 @@ final class KeyboardLanguageMatcherTests: XCTestCase {
                        ["en-US", "es-ES", "fr-FR"])
     }
 }
+
+final class WhatsAppLinkTests: XCTestCase {
+    private func intl(_ n: String, _ r: String? = "FR") -> String? {
+        WhatsAppLink.internationalDigits(of: n, defaultRegion: r)
+    }
+
+    func testInternationalDigits() {
+        XCTAssertEqual(intl("+44 7700 900123"), "447700900123")
+        XCTAssertEqual(intl("0033 6 12 34 56 78"), "33612345678")
+        XCTAssertEqual(intl("06 12 34 56 78"), "33612345678")
+        XCTAssertEqual(intl("0692 12 34 56"), "262692123456")   // Réunion mobile
+        XCTAssertEqual(intl("0696 12 34 56"), "596696123456")   // Martinique mobile
+        XCTAssertEqual(intl("07700 900123", "GB"), "447700900123")
+        XCTAssertEqual(intl("(415) 555-0132", "US"), "14155550132")
+        XCTAssertNil(intl("07700 900123", "FR"))                // can't tell which country
+        XCTAssertNil(intl("123", "FR"))
+    }
+
+    func testURLEncodesMessage() {
+        let url = WhatsAppLink.url(internationalDigits: "33612345678", text: "Ça va? 1+1 & co")
+        XCTAssertEqual(url?.absoluteString, "https://wa.me/33612345678?text=%C3%87a%20va%3F%201%2B1%20%26%20co")
+    }
+
+    func testPicksFirstUsableNumber() {
+        let url = WhatsAppLink.url(phoneNumbers: ["n/a", "06 12 34 56 78"], text: "hi", defaultRegion: "FR")
+        XCTAssertEqual(url?.absoluteString, "https://wa.me/33612345678?text=hi")
+        XCTAssertNil(WhatsAppLink.url(phoneNumbers: ["n/a"], text: "hi", defaultRegion: "FR"))
+    }
+}

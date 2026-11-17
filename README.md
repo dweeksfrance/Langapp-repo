@@ -15,7 +15,11 @@ Numbers without a country code are read using the iPhone's region setting.
 
 The app can only switch to keyboards you have enabled in **Settings › General › Keyboard › Keyboards**. If the right keyboard isn't enabled, the compose screen tells you. You can still change keyboard by hand with the globe key at any time.
 
-Sending hands the text to Messages.
+**Send** offers two ways to send:
+- **Messages** opens the text in Messages.
+- **WhatsApp** opens the contact's WhatsApp chat with the text filled in. You tap send in WhatsApp. If WhatsApp isn't installed, the link opens in Safari.
+
+The keyboard only switches inside Langapp. iOS doesn't let one app choose another app's keyboard, so it won't switch when you type directly in WhatsApp.
 
 ## Build
 
