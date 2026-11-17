@@ -14,8 +14,9 @@ public enum WhatsAppLink {
 
     public static func url(internationalDigits: String, text: String) -> URL? {
         // Encode everything except unreserved characters, so "+" and "&" in the message survive.
-        var allowed = CharacterSet.alphanumerics
-        allowed.insert(charactersIn: "-._~")
+        // ASCII only: CharacterSet.alphanumerics would also let accented letters through unencoded.
+        let allowed = CharacterSet(charactersIn:
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
         let encoded = text.addingPercentEncoding(withAllowedCharacters: allowed) ?? ""
         return URL(string: "https://wa.me/\(internationalDigits)?text=\(encoded)")
     }
